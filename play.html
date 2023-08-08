@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <meta name="referrer" content="no-referrer" /> -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>play</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.5.1/video-js.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.5.1/video.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.5.1/lang/zh-CN.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.6.2/flv.min.js"></script>
+<style>
+#content .video-js .vjs-big-play-button {
+    top: 50%;
+    left: 50%;
+    margin-top: -0.75em;
+    margin-left: -1.5em;
+}
+/**显示按钮**/
+.vjs-paused .vjs-big-play-button,
+.vjs-paused.vjs-has-started .vjs-big-play-button {
+    display: block;
+}
+ /**按钮居中**/ 
+.video-js.vjs-playing .vjs-tech {
+    pointer-events: auto;
+}
+/**显示结束和开始时间**/
+.video-js .vjs-time-control{display:block;}
+.video-js .vjs-remaining-time{display: none;}
+</style>
+</head>
+<body style="margin:0px;">
+<div id="content" style="
+    background: #eee;
+    height: 100%;
+    width: 100%;
+    position: absolute;">
+<video id="player" class="video-js" controls preload="auto" style="width: 100%;height:100%" data-setup="{}" muted><source src="" type="video/mp4"></video>
+</div>
+<script>
+function getQueryString(name) {  
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");  
+    var r = window.location.search.substr(1).match(reg);  
+    if (r != null) return decodeURI(r[2]);  
+    return null;  
+}
+var url = getQueryString('url');
+if(url.indexOf("rtmp://") > -1 || url.indexOf("flv") > -1){
+    if (flvjs.isSupported()) {
+        var videoElement = document.getElementById('player');
+        var flvPlayer = flvjs.createPlayer({
+            type: 'flv',
+            url: url
+        });
+        flvPlayer.attachMediaElement(videoElement);
+        flvPlayer.load();
+        flvPlayer.play();
+    }
+// document.getElementById('content').innerHTML = '<video id="player" class="video-js" controls preload="auto" style="width: 100%;height:100%" data-setup="{}"><source src="'+url+'" type="rtmp/flv"/></video>';
+console.log("type:flv");
+}else if(url.indexOf("m3u8") > -1){ 
+document.getElementById('content').innerHTML = '<video id="player" class="video-js" controls preload="auto" webkit-playsinline=“true” playsinline=“true” style="width: 100%;height:100%" data-setup="{}"><source src="'+url+'" type="application/x-mpegURL"/></video>';
+console.log("type:m3u8");
+}else if(url.indexOf("mp4") > -1){
+document.getElementById('content').innerHTML = '<video id="player" class="video-js" controls preload="auto" style="width: 100%;height:100%" data-setup="{}"><source src="'+url+'" type="video/mp4"/></video>';
+console.log("type:mp4");
+}
+var vtime=document.getElementById("player");
+var isplay = false;
+        var keyEvent = (function () {
+            document.onkeydown = function (e) {
+                 if (e.keyCode === 37) { // left
+                  vtime.currentTime=vtime.currentTime-5;
+                } else if (e.keyCode === 39) { // right
+                  vtime.currentTime=vtime.currentTime+5;
+                } else if (e.keyCode === 32) {
+                    if(isplay) {
+                         isplay = false;
+                         vtime.pause();
+                    }else {
+                         isplay = true;
+                         vtime.play();
+                    }
+                }
+            }
+        })();
+</script>
+</body>
+</html>

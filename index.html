@@ -88,8 +88,23 @@ function play(){
     var Sel=document.getElementById("api");
     var index=Sel.selectedIndex;
     var jk=Sel.options[index].value;
-    var url=jk+document.getElementById("url").value;
-    document.getElementById("ifm").src=url;
+    var url=document.getElementById("url").value;
+    var urls = ["v.qq","iqiyi.com","mgtv.com","bilibili.com","v.youku","tv.sohu","le.com"];
+    //判断视频是否直链
+    if(url.indexOf(".m3u8") > -1 || url.indexOf(".mp4") > -1 || url.indexOf(".flv") > -1){
+            if(url.indexOf("http") > -1){
+                document.getElementById("ifm").src="play.html?url="+url;
+            }
+    }
+    //如果是以上视频站则直接解析
+    for(var i = 0; i < urls.length; i++){
+        if(url.indexOf(urls[i]) > -1){
+            if(url.indexOf("http") > -1){
+                document.getElementById("ifm").src=jk+url;
+                break;
+            }
+        }
+    }
 }
 </script>
 </body>
