@@ -93,7 +93,7 @@ function play(){
     var urls = ["v.qq","iqiyi.com","mgtv.com","bilibili.com","v.youku","tv.sohu","le.com"];
     //判断视频是否直链
     if(url.indexOf(".m3u8") > -1 || url.indexOf(".mp4") > -1 || url.indexOf(".flv") > -1){
-            if(url.indexOf("http") > -1){
+            if(url.indexOf("//") > -1){
                 document.getElementById("ifm").src="play.html?url="+url;
             }
     }
